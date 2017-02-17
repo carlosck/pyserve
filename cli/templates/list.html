@@ -1,0 +1,24 @@
+<html>
+  <head>
+    
+    
+  </head>
+  <body>
+      <table>
+      {% for commit in commits %}
+        
+          <tr>
+            <td>
+              <p>{{ commit.message }}</p>
+            </td>
+            <td>
+              <p>{{ commit.committer }}</p>
+            </td>
+            <td>
+              <p>{{ commit.committed_date }}</p>
+            </td>
+          </tr>
+      {% endfor %}
+      </table>
+  </body>
+</html>

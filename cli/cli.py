@@ -1,9 +1,11 @@
 from flask import Flask
 import subprocess
-from git import Repo
-from git import RemoteProgress
+
+from gitter import Gitter
 
 from var_dump import var_dump
+from flask import render_template
+
 
 app = Flask(__name__)
 
@@ -23,21 +25,23 @@ def pull():
 	tmp  = proc.stdout.read()
 	return tmp
 
+@app.route("/list/")
+def list():  
+	
+	g= Gitter('/Users/Seca/Public/wworks/test/polemica/polemica/cmks/cms')
+	commits= g.listCommits('master')
+	return render_template('list.html',
+							title='Home',
+							commits=commits)
+
 @app.route("/git/push")
 def gitPush():  	
-	repo = Repo('/Users/Seca/Public/wworks/test/polemica/polemica/cmks/cms')	
-	print("tres")
-	try:		
-		o = repo.remotes.heroku
-		
-		este= o.push()
-		var_dump(list(este))
-			#print("Updated %s to %s" % (fetch_info.ref, fetch_info.commit))		
-	except:
+	
+	g= Gitter('/Users/Seca/Public/wworks/test/polemica/polemica/cmks/cms')
+	
+	#g.pushTo('heroku','develop')
 
-		return "mal"	
-
-	return "bien"
+	return g.pushTo('heroku','master')
 
 @app.route("/git/pull")
 def git():  
@@ -66,12 +70,9 @@ def git():
 	return "bien"
 
 
-class MyProgressPrinter(RemoteProgress):
-	def update(self, op_code, cur_count, max_count=None, message=''):
-		print(op_code, cur_count, max_count, cur_count / (max_count or 100.0), message or "NO MESSAGE")
-
 if __name__=="__main__":
-	print("dos")
+	#print("dos")
+	#g= Gitter('/Users/Seca/Public/wworks/test/polemica/polemica/cmks/cms')
 	app.run()
 	#repo = Repo('/Users/Seca/Public/wworks/2016/FIAT/fca/VVV/www/mitsubishi/htdocs')
 	#o = repo.remotes.stage
